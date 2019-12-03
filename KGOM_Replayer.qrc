@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Viewmap.qml</file>
+        <file>KissStaMarker.qml</file>
+        <file>LocalStaMarker.qml</file>
+        <file>EEWStarMarker.qml</file>
+        <file>MyPositionMarker.qml</file>
+        <file>EventMarker.qml</file>
+        <file>MapText.qml</file>
+        <file>Icon/myPositionMarker2.png</file>
+        <file>Icon/myPositionMarker.png</file>
+        <file>Icon/localStaMarker.png</file>
+        <file>Icon/kissStaMarker.png</file>
+        <file>Icon/eewEventMarker.png</file>
+    </qresource>
+</RCC>
