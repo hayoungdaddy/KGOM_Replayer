@@ -17,10 +17,11 @@ OnsiteInfo::~OnsiteInfo()
 
 void OnsiteInfo::setup(_KGOnSite_Info_t info)
 {
-    QDateTime t; t.setTime_t(info.ttime);
-    t.setTimeSpec(Qt::UTC);
-    t = convertKST(t);
-    ui->timeLB->setText(t.toString("yyyy-MM-dd hh:mm:ss"));
+    QDateTime tUTC, tKST;
+    tUTC.setTimeSpec(Qt::UTC);
+    tUTC.setTime_t(info.ttime);
+    tKST = convertKST(tUTC);
+    ui->timeLB->setText(tKST.toString("yyyy-MM-dd hh:mm:ss"));
     ui->scnlLB->setText(QString(info.sta));
 
     setIntenWG(info.intensity);

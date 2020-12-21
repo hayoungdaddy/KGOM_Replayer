@@ -7,6 +7,9 @@ MainWindow::MainWindow(QString dbFileName, QString evid, QString myPLat, QString
 {
     ui->setupUi(this);
 
+    QIcon icon("/home/sysop/KGOM/params/images/PCIcon.png");
+    setWindowIcon(icon);
+
     codec = QTextCodec::codecForName("utf-8");
     myPosition_Lat = myPLat.toDouble();
     myPosition_Lon = myPLon.toDouble();
@@ -52,7 +55,7 @@ void MainWindow::goEvent()
     else if(myT == "1")
     {
         ui->eventTimeLCD->setDigitCount(10);
-        ui->eventTimeLCD->display(eventStartTime.toString("hh:mm:ss"));
+        ui->eventTimeLCD->display(eventStartTimeKST.toString("hh:mm:ss"));
         mainTimer->setInterval(100);
         if(needAnimation)
         {
@@ -61,8 +64,8 @@ void MainWindow::goEvent()
     }
     else
     {
-        eventStartTime = eventStartTime.addMSecs(100);
-        ui->eventTimeLCD->display(eventStartTime.toString("hh:mm:ss"));
+        eventStartTimeKST = eventStartTimeKST.addMSecs(100);
+        ui->eventTimeLCD->display(eventStartTimeKST.toString("hh:mm:ss"));
         if(needAnimation)
         {
             showAnimation();
@@ -319,13 +322,13 @@ void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EE
 
     if(eewInfos.count() != 0)
     {
-        QDateTime ttime;
-        ttime.setTimeSpec(Qt::UTC);
-        ttime.setTime_t(eewInfos.first().origin_time); 
-        ttime = convertKST(ttime);
-        ui->timeLB->setText(ttime.toString("yyyy-MM-dd hh:mm:ss ") +"KST");
-        ui->eventTimeLCD->display(ttime.toString("hh:mm:ss"));
-        eventStartTime = ttime;
+        QDateTime ttimeUTC, ttimeKST;
+        ttimeUTC.setTimeSpec(Qt::UTC);
+        ttimeUTC.setTime_t(eewInfos.first().origin_time);
+        ttimeKST = convertKST(ttimeUTC);
+        ui->timeLB->setText(ttimeKST.toString("yyyy-MM-dd hh:mm:ss ") +"KST");
+        ui->eventTimeLCD->display(ttimeKST.toString("hh:mm:ss"));
+        eventStartTimeKST = ttimeKST;
 
         double dist = getDistance(eewInfos.first().latitude, eewInfos.first().longitude, myPosition_Lat, myPosition_Lon);
 
@@ -400,13 +403,14 @@ void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EE
         {
             if(i == 0 && eewInfos.count() == 0)
             {
-                QDateTime ttime;
-                ttime.setTime_t(tempInfos.at(i).ttime);
-                ttime.setTimeSpec(Qt::UTC);
-                ttime = convertKST(ttime);
-                ui->timeLB->setText(ttime.toString("yyyy-MM-dd hh:mm:ss ") +"KST");
-                ui->eventTimeLCD->display(ttime.toString("hh:mm:ss"));
-                eventStartTime = ttime;
+                QDateTime ttimeUTC, ttimeKST;
+                ttimeUTC.setTimeSpec(Qt::UTC);
+                ttimeUTC.setTime_t(tempInfos.at(i).ttime);
+
+                ttimeKST = convertKST(ttimeUTC);
+                ui->timeLB->setText(ttimeKST.toString("yyyy-MM-dd hh:mm:ss ") +"KST");
+                ui->eventTimeLCD->display(ttimeKST.toString("hh:mm:ss"));
+                eventStartTimeKST = ttimeKST;
             }
 
             OnsiteInfo *onsiteinfo = new OnsiteInfo;

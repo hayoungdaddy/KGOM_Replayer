@@ -43,8 +43,8 @@ private:
     QString intenPath;
 
     int totalDuration;
-    QDateTime eventStartTime;
     QTimer *mainTimer;
+    QDateTime eventStartTimeUTC, eventStartTimeKST;
 
     // About alert Map & communicating beetween qml and cpp
     QObject *aRootObj;

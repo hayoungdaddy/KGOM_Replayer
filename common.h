@@ -9,8 +9,9 @@
 #include <QDebug>
 #include <QTextCodec>
 #include <QMessageBox>
+#include <QtMath>
 
-#define KGOM_VERSION 1.0
+#define KGOM_VERSION 2.0
 
 #define MAX_LOCALSTA_NUM 9
 #define MAX_KISSSTA_NUM 6
