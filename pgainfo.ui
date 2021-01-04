@@ -243,15 +243,15 @@ color: white;</string>
                  <property name="font">
                   <font>
                    <pointsize>12</pointsize>
-                   <weight>50</weight>
-                   <bold>false</bold>
+                   <weight>75</weight>
+                   <bold>true</bold>
                   </font>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>현장경보 - 최대지반가속도</string>
+                  <string>최대지반가속도 정보</string>
                  </property>
                 </widget>
                </item>
