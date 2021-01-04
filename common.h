@@ -10,6 +10,7 @@
 #include <QTextCodec>
 #include <QMessageBox>
 #include <QtMath>
+#include <QtConcurrent>
 
 #define KGOM_VERSION 2.0
 
@@ -57,16 +58,7 @@
 
 #define PI 3.14159265358979323846
 
-#define INTEN1COLOR "#D3D7CF"
-#define INTEN2COLOR "#BFCCFF"
-#define INTEN3COLOR "#A0E6FF"
-#define INTEN4COLOR "#80FFFF"
-#define INTEN5COLOR "#7AFF93"
-#define INTEN6COLOR "#FFFF00"
-#define INTEN7COLOR "#FFC800"
-#define INTEN8COLOR "#FF9100"
-#define INTEN9COLOR "#FF0000"
-#define INTEN10COLOR "#C80000"
+#define NUM_LEGEND 10
 
 static QString find_loc_program = "findLocC";
 
@@ -507,6 +499,36 @@ static double getDistance(double lat1, double lon1, double lat2, double lon2)
     double dist, azim;
     int rtn = geo_to_km(lat1, lon1, lat2, lon2, &dist, &azim);
     return dist;
+}
+
+static     int     inten[NUM_LEGEND] = {    1,    2,      3,     4,     5,      6,      7,      8,      9,     10 };
+static QString intenText[NUM_LEGEND] = {  "I",  "II", "III",  "IV",   "V",   "VI",  "VII", "VIII",   "IX",    "X" };
+static  double  pgaValue[NUM_LEGEND] = { 0.97, 2.94,   4.90, 23.52, 65.66, 127.40, 235.20, 431.20, 813.40, 999999 };
+static     int  pgaWidth[NUM_LEGEND] = {   12,   13,     14,    16,    18,     20,     20,     20,     20,     20 };
+static  QColor  pgaColor[NUM_LEGEND] = { QColor(215, 236, 255), QColor(165, 221, 249), QColor(146, 208,  80), QColor(255, 255,   0), QColor(255, 192,   0),
+                                       QColor(255,   0,   0), QColor(163,  39, 119), QColor( 99,  37,  35), QColor( 76,  38,   0), QColor(  0,   0,   0) };
+
+static int getLegendIndex(double value)
+{
+    int legendIndex;
+
+    double gal = myRound(value, 2);
+
+    if( gal <= pgaValue[0] ) legendIndex = 0; // min
+    else if( gal > pgaValue[8] ) legendIndex = 9; // max
+    else
+    {
+        for(int i=1;i<9;i++) // 1 ~ 8
+        {
+            if(gal <= pgaValue[i])
+            {
+                legendIndex = i;
+                break;
+            }
+        }
+    }
+
+    return legendIndex;
 }
 
 

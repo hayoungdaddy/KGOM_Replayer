@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui quick sql location
+QT       += core gui quick sql location concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,11 +29,13 @@ SOURCES += \
         mainwindow.cpp \
     eewinfo.cpp \
     onsiteinfo.cpp \
+    pgaalertinfo.cpp \
     pgainfo.cpp
 
 HEADERS += \
         mainwindow.h \
     common.h \
+    pgaalertinfo.h \
     regends.h \
     eewinfo.h \
     onsiteinfo.h \
@@ -43,6 +45,7 @@ FORMS += \
         mainwindow.ui \
     eewinfo.ui \
     onsiteinfo.ui \
+    pgaalertinfo.ui \
     pgainfo.ui
 
 RESOURCES += \

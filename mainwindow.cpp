@@ -155,15 +155,39 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
     this->onsiteModel = new QSqlQueryModel();
     this->eewModel = new QSqlQueryModel();
     this->pgaModel = new QSqlQueryModel();
+    this->pgaDetectModel = new QSqlQueryModel();
 
     QString query;
 
     QVector<_KGOnSite_Info_t> onsiteInfos;
     QVector<_EEWInfo> eewInfos;
     QVector<_KGKIIS_GMPEAK_EVENT_STA_t> pgaInfos;
+    QVector<_KGKIIS_GMPEAK_EVENT_STA_t> pgaDetectInfos;
 
     QString pgaChannel;
     int pgaTime;
+
+    query = "select * from pgaDetectInfo where evid =" + evid;
+    this->pgaDetectModel->setQuery(query);
+
+    if(this->pgaDetectModel->rowCount() > 0)
+    {
+        for(int i=0;i<this->pgaDetectModel->rowCount();i++)
+        {
+            _KGKIIS_GMPEAK_EVENT_STA_t info;
+            info.version = this->pgaDetectModel->record(i).value("version").toInt();
+
+            strcpy(info.sta, this->pgaDetectModel->record(i).value("sta").toString().toLatin1().constData());
+            strcpy(info.chan, this->pgaDetectModel->record(i).value("chan").toString().toLatin1().constData());
+            strcpy(info.net, this->pgaDetectModel->record(i).value("net").toString().toLatin1().constData());
+            strcpy(info.loc, this->pgaDetectModel->record(i).value("loc").toString().toLatin1().constData());
+            info.lat   = this->pgaDetectModel->record(i).value("lat").toDouble();
+            info.lon   = this->pgaDetectModel->record(i).value("lon").toDouble();
+            info.time  = this->pgaDetectModel->record(i).value("time").toInt();
+            info.maxH = this->pgaDetectModel->record(i).value("maxH").toFloat();
+            pgaDetectInfos.push_back(info);
+        }
+    }
 
     query = "select * from pgaInfo where evid =" + evid;
     this->pgaModel->setQuery(query);
@@ -174,10 +198,10 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
         {
             _KGKIIS_GMPEAK_EVENT_STA_t info;
             info.version = this->pgaModel->record(i).value("version").toInt();
-            char *temp;
-            temp = (char*) malloc(sizeof(char));
-            strcpy(temp, this->pgaModel->record(i).value("msg_type").toString().toLatin1().constData());
-            info.msg_type = temp[0];
+            //char *temp;
+            //temp = (char*) malloc(sizeof(char));
+            //strcpy(temp, this->pgaModel->record(i).value("msg_type").toString().toLatin1().constData());
+            //info.msg_type = temp[0];
             strcpy(info.sta, this->pgaModel->record(i).value("sta").toString().toLatin1().constData());
             strcpy(info.chan, this->pgaModel->record(i).value("chan").toString().toLatin1().constData());
             strcpy(info.net, this->pgaModel->record(i).value("net").toString().toLatin1().constData());
@@ -193,7 +217,7 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
             info.maxH = this->pgaModel->record(i).value("maxH").toFloat();
             info.maxT = this->pgaModel->record(i).value("maxT").toFloat();
             pgaInfos.push_back(info);
-            free(temp);
+            //free(temp);
         }
     }
 
@@ -206,18 +230,18 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
         {
             _KGOnSite_Info_t info;
             info.version = this->onsiteModel->record(i).value("version").toInt();
-            char *temp;
-            temp = (char*) malloc(sizeof(char));
-            strcpy(temp, this->onsiteModel->record(i).value("msg_type").toString().toLatin1().constData());
-            info.msg_type = temp[0];
+            //char *temp;
+            //temp = (char*) malloc(sizeof(char));
+            //strcpy(temp, this->onsiteModel->record(i).value("msg_type").toString().toLatin1().constData());
+            //info.msg_type = temp[0];
             strcpy(info.sta, this->onsiteModel->record(i).value("sta").toString().toLatin1().constData());
             strcpy(info.chan, this->onsiteModel->record(i).value("chan").toString().toLatin1().constData());
             strcpy(info.net, this->onsiteModel->record(i).value("net").toString().toLatin1().constData());
             strcpy(info.loc, this->onsiteModel->record(i).value("loc").toString().toLatin1().constData());
-            strcpy(temp, this->onsiteModel->record(i).value("duration").toString().toLatin1().constData());
-            info.duration = temp[0];
-            strcpy(temp, this->onsiteModel->record(i).value("type").toString().toLatin1().constData());
-            info.type = temp[0];
+            //strcpy(temp, this->onsiteModel->record(i).value("duration").toString().toLatin1().constData());
+            //info.duration = temp[0];
+            //strcpy(temp, this->onsiteModel->record(i).value("type").toString().toLatin1().constData());
+            //info.type = temp[0];
             info.ttime = this->onsiteModel->record(i).value("ttime").toDouble();
             info.disp_count = this->onsiteModel->record(i).value("disp_count").toFloat();
             info.displacement = this->onsiteModel->record(i).value("displacement").toFloat();
@@ -240,13 +264,13 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
             info.distance_uncertainty_low = this->onsiteModel->record(i).value("distance_uncertainty_low").toFloat();
             info.distance_uncertainty_high = this->onsiteModel->record(i).value("distance_uncertainty_high").toFloat();
             info.evid = evid.toInt();
-            strcpy(temp, this->onsiteModel->record(i).value("fromWhere").toString().toLatin1().constData());
-            info.fromWhere = temp[0];
+            //strcpy(temp, this->onsiteModel->record(i).value("fromWhere").toString().toLatin1().constData());
+            //info.fromWhere = temp[0];
             info.lat = this->onsiteModel->record(i).value("lat").toDouble();
             info.lon = this->onsiteModel->record(i).value("lon").toDouble();
             info.elev = this->onsiteModel->record(i).value("elev").toDouble();
             onsiteInfos.push_back(info);
-            free(temp);
+            //free(temp);
         }
     }
 
@@ -259,10 +283,10 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
         {
             _EEWInfo eewInfo;
             eewInfo.evid = this->eewModel->record(i).value("evid").toInt();
-            char *temp;
-            temp = (char*) malloc(sizeof(char));
-            strcpy(temp, this->eewModel->record(i).value("type").toString().toLatin1().constData());
-            eewInfo.type = temp[0];
+            //char *temp;
+            //temp = (char*) malloc(sizeof(char));
+            //strcpy(temp, this->eewModel->record(i).value("type").toString().toLatin1().constData());
+            //eewInfo.type = temp[0];
             eewInfo.eew_evid = this->eewModel->record(i).value("eew_evid").toInt();
             eewInfo.version = this->eewModel->record(i).value("version").toInt();
             int mc = this->eewModel->record(i).value("message_category").toInt();
@@ -289,17 +313,17 @@ void MainWindow::getEventInfo(QString dbFileName, QString evid)
             eewInfo.percentsta = this->eewModel->record(i).value("percentsta").toDouble();
             eewInfo.misfit = this->eewModel->record(i).value("misfit").toDouble();
             eewInfo.sent_flag = this->eewModel->record(i).value("sent_flag").toInt();
-            free(temp);
+            //free(temp);
             eewInfos.push_back(eewInfo);
         }
     }
 
-    setAlertList(onsiteInfos, eewInfos, pgaChannel, pgaTime, pgaInfos, evid);
+    setAlertTab(onsiteInfos, eewInfos, pgaTime, pgaDetectInfos, pgaInfos, evid);
     //detailview->setup(onsiteInfos, eewInfos, pgaChannel, pgaTime, pgaInfos, evidS, configure.KGOM_HOME);
 }
 
-void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EEWInfo> eewInfos,
-                             QString pgaChannel, int pgaTime, QVector<_KGKIIS_GMPEAK_EVENT_STA_t> pgaInfos, QString evid)
+void MainWindow::setAlertTab(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EEWInfo> eewInfos,
+                             int pgaTime, QVector<_KGKIIS_GMPEAK_EVENT_STA_t> pgaDetectInfos, QVector<_KGKIIS_GMPEAK_EVENT_STA_t> pgaInfos, QString evid)
 {
     QLayoutItem *child;
 
@@ -318,9 +342,8 @@ void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EE
 
     QString query = "SELECT lddate FROM event WHERE evid=" +  evid;
     this->eventModel->setQuery(query);
-    drawIntensityOnMap(intenPath, this->eventModel->record(0).value("lddate").toString(), evid);;
 
-    if(eewInfos.count() != 0)
+    if(!eewInfos.isEmpty())
     {
         QDateTime ttimeUTC, ttimeKST;
         ttimeUTC.setTimeSpec(Qt::UTC);
@@ -345,29 +368,19 @@ void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EE
 
         remainSecPAbsolute = (myRound(dist / pVelocity, 1));
         remainSecSAbsolute = (myRound(dist / sVelocity, 1));
-        /*
-        endTimeP.setTimeSpec(Qt::UTC);
-        endTimeS.setTimeSpec(Qt::UTC);
-        endTimeP.setTime_t(eewInfos.first().origin_time + remainSecPAbsolute);
-        endTimeS.setTime_t(eewInfos.first().origin_time + remainSecSAbsolute);
-        endTimeP = convertKST(endTimeP);
-        endTimeS = convertKST(endTimeS);
-        remainSecPRelative = endTimeP.toTime_t() - eventStartTime.toTime_t();
-        remainSecSRelative = endTimeS.toTime_t() - eventStartTime.toTime_t();
-        */
+
         remainSecPRelative = remainSecPAbsolute;
         remainSecSRelative = remainSecSAbsolute;
-        //if(remainSecPRelative >= remainSecPAbsolute)
-        //    remainSecPAbsolute = remainSecPRelative;
+
         aniLat = eewInfos.first().latitude;
         aniLon = eewInfos.first().longitude;
-        //qDebug() << dist << pVelocity << sVelocity << remainSecPAbsolute << endTimeP.toString("hh:mm:ss") << eventStartTime.toString("hh:mm:ss") << remainSecPRelative;
+
         needAnimation = true;
         intensity = QString::number(getIntenFromMag(eewInfos.first().magnitude, dist));
         vibration = getStringFromInten(getIntenFromMag(eewInfos.first().magnitude, dist));
     }
 
-    if(onsiteInfos.count() != 0)
+    if(!onsiteInfos.isEmpty())
     {
         // sort infos,  using ttime/sta/net
         QVector<_KGOnSite_Info_t> tempInfos;
@@ -438,15 +451,62 @@ void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EE
         }
     }
 
+    if(!pgaDetectInfos.isEmpty())
+    {
+        QVector<_KGKIIS_GMPEAK_EVENT_STA_t> tempInfos;
+
+        for(int i=0;i<pgaDetectInfos.count();i++)
+        {
+            _KGKIIS_GMPEAK_EVENT_STA_t info = pgaDetectInfos.at(i);
+
+            if(tempInfos.isEmpty())
+            {
+                tempInfos.append(info);
+                continue;
+            }
+
+            bool inserted = false;
+
+            for(int j=0;j<tempInfos.size();j++)
+            {
+                _KGKIIS_GMPEAK_EVENT_STA_t tempinfo = tempInfos.at(j);
+                if(info.time < tempinfo.time)
+                {
+                    tempInfos.insert(j, info);
+                    inserted = true;
+                    break;
+                }
+            }
+
+            if(!inserted)
+                tempInfos.append(info);
+        }
+
+        for(int i=0;i<tempInfos.size();i++)
+        {
+            PgaAlertInfo *pgaAlertInfo = new PgaAlertInfo;
+            pgaAlertInfo->setup(tempInfos.at(i));
+            ui->alertListVLO->addWidget(pgaAlertInfo);
+
+            /*
+            drawPGAOnMap(pgaInfos.at(i));
+            if(pgaInfos.at(i).lat < minLat) minLat = pgaInfos.at(i).lat;
+            if(pgaInfos.at(i).lat > maxLat) maxLat = pgaInfos.at(i).lat;
+            if(pgaInfos.at(i).lon < minLon) minLon = pgaInfos.at(i).lon;
+            if(pgaInfos.at(i).lon > maxLon) maxLon = pgaInfos.at(i).lon;
+            */
+        }
+    }
+
     if(pgaInfos.count() != 0)
     {
         PgaInfo *pgainfo = new PgaInfo;
-        pgainfo->setup(pgaChannel, pgaTime, pgaInfos);
+        pgainfo->setup(pgaTime, pgaInfos);
         ui->alertListVLO->addWidget(pgainfo);
 
         for(int i=0;i<pgaInfos.count();i++)
         {
-            drawPGAOnMap(pgaChannel, pgaInfos.at(i));
+            drawPGAOnMap(pgaInfos.at(i));
             if(pgaInfos.at(i).lat < minLat) minLat = pgaInfos.at(i).lat;
             if(pgaInfos.at(i).lat > maxLat) maxLat = pgaInfos.at(i).lat;
             if(pgaInfos.at(i).lon < minLon) minLon = pgaInfos.at(i).lon;
@@ -470,76 +530,6 @@ void MainWindow::setAlertList(QVector<_KGOnSite_Info_t> onsiteInfos, QVector<_EE
                               Q_ARG(QVariant, (minLat+maxLat)/2), Q_ARG(QVariant, (minLon+maxLon)/2), Q_ARG(QVariant, dist));
 }
 
-void MainWindow::drawIntensityOnMap(QString path, QString yearMonth, QString evid)
-{
-    QString fileName = path + "/" + yearMonth.left(4) + "/" + yearMonth.mid(4, 2) + "/" + evid + "/Intensity.dat";
-
-    int numPath = 0, numLine = 0;
-    QVector<double> lat;
-    QVector<double> lon;
-    QVector<double> inten;
-
-    QFile file(fileName);
-
-    if(!file.exists())
-    {
-        return;
-    }
-    if(file.open(QIODevice::ReadOnly))
-    {
-        QTextStream stream(&file);
-        QString line, _line;
-
-        line = stream.readLine();
-        _line = line.simplified();
-        numPath = _line.section(" ", 0, 0).toInt();
-        numLine = _line.section(" ", 1, 1).toInt();
-
-        while(!stream.atEnd())
-        {
-            line = stream.readLine();
-            _line = line.simplified();
-
-            if(!_line.startsWith(" "))
-            {
-                lon.push_back(_line.section(" ", 0, 0).toDouble());
-                lat.push_back(_line.section(" ", 1, 1).toDouble());
-                inten.push_back(_line.section(" ", 2, 2).toDouble());
-            }
-        }
-        file.close();
-    }
-
-    for(int i=0;i<numPath;i++)
-    {
-        QVariantList latP;
-        QVariantList lonP;
-        QVariantList intenP;
-        QVariantList colorP;
-
-        for(int j=i*numLine;j<=(i+1)*numLine-1;j++)
-        {
-            latP.push_back(lat.at(j));
-            lonP.push_back(lon.at(j));
-            intenP.push_back(inten.at(j));
-
-            if(inten.at(j) >= 1 && inten.at(j) < 2)                colorP.push_back(INTEN1COLOR);
-            else if(inten.at(j) >= 2 && inten.at(j) < 3)                colorP.push_back(INTEN2COLOR);
-            else if(inten.at(j) >= 3 && inten.at(j) < 4)                colorP.push_back(INTEN3COLOR);
-            else if(inten.at(j) >= 4 && inten.at(j) < 5)                colorP.push_back(INTEN4COLOR);
-            else if(inten.at(j) >= 5 && inten.at(j) < 6)                colorP.push_back(INTEN5COLOR);
-            else if(inten.at(j) >= 6 && inten.at(j) < 7)                colorP.push_back(INTEN6COLOR);
-            else if(inten.at(j) >= 7 && inten.at(j) < 8)                colorP.push_back(INTEN7COLOR);
-            else if(inten.at(j) >= 8 && inten.at(j) < 9)                colorP.push_back(INTEN8COLOR);
-            else if(inten.at(j) >= 9 && inten.at(j) < 10)                colorP.push_back(INTEN9COLOR);
-            else if(inten.at(j) >= 10)                colorP.push_back(INTEN10COLOR);
-        }
-
-        QMetaObject::invokeMethod(this->aRootObj, "addPolygon", Q_RETURN_ARG(QVariant, aReturnedValue),
-                                  Q_ARG(QVariant, latP), Q_ARG(QVariant, lonP), Q_ARG(QVariant, colorP), Q_ARG(QVariant, numLine));
-    }
-}
-
 void MainWindow::drawEEWOnMap(_EEWInfo eewInfo)
 {
     QString tempMag = QString::number(eewInfo.magnitude, 'f', 1);
@@ -550,24 +540,26 @@ void MainWindow::drawEEWOnMap(_EEWInfo eewInfo)
                               Q_ARG(QVariant, tempMag));
 }
 
-void MainWindow::drawPGAOnMap(QString chan, _KGKIIS_GMPEAK_EVENT_STA_t pgaInfo)
+void MainWindow::drawPGAOnMap(_KGKIIS_GMPEAK_EVENT_STA_t pgaInfo)
 {
     double lat, lon;
     lat = pgaInfo.lat;
     lon = pgaInfo.lon;
     QString pgaS;
 
-    if(chan.startsWith("Z")) pgaS = QString::number(pgaInfo.maxZ, 'f', 4);
-    else if(chan.startsWith("N")) pgaS = QString::number(pgaInfo.maxN, 'f', 4);
-    else if(chan.startsWith("E")) pgaS = QString::number(pgaInfo.maxE, 'f', 4);
-    else if(chan.startsWith("H")) pgaS = QString::number(pgaInfo.maxH, 'f', 4);
-    else if(chan.startsWith("T")) pgaS = QString::number(pgaInfo.maxT, 'f', 4);
+    pgaS = QString::number(pgaInfo.maxH, 'f', 4);
 
     QString text = QString(pgaInfo.sta) + "\n" + pgaS + " gal";
 
+    int net;    // 1 : KISS, 0 : LOCAL
+    if(QString(pgaInfo.net).startsWith("KG") || QString(pgaInfo.net).startsWith("KS"))
+        net = 1;
+    else
+        net = 0;
+
     QMetaObject::invokeMethod(this->aRootObj, "addStaMarker",
                               Q_RETURN_ARG(QVariant, aReturnedValue),
-                              Q_ARG(QVariant, 0),
+                              Q_ARG(QVariant, net),
                               Q_ARG(QVariant, lat), Q_ARG(QVariant, lon),
                               Q_ARG(QVariant, text));
 }

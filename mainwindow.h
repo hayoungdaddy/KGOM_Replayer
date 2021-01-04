@@ -6,6 +6,7 @@
 #include "onsiteinfo.h"
 #include "eewinfo.h"
 #include "pgainfo.h"
+#include "pgaalertinfo.h"
 
 #include <QMainWindow>
 
@@ -57,6 +58,7 @@ private:
     QSqlQueryModel *onsiteModel;
     QSqlQueryModel *pgaModel;
     QSqlQueryModel *eewModel;
+    QSqlQueryModel *pgaDetectModel;
 
     // About animations
     QDateTime endTimeP, endTimeS;
@@ -74,13 +76,13 @@ private:
     void decorationGUI();
 
     void getEventInfo(QString, QString);
-    void setAlertList(QVector<_KGOnSite_Info_t>, QVector<_EEWInfo>, QString, int, QVector<_KGKIIS_GMPEAK_EVENT_STA_t>, QString);
+    //void setAlertList(QVector<_KGOnSite_Info_t>, QVector<_EEWInfo>, QString, int, QVector<_KGKIIS_GMPEAK_EVENT_STA_t>, QString);
+    void setAlertTab(QVector<_KGOnSite_Info_t>, QVector<_EEWInfo>, int, QVector<_KGKIIS_GMPEAK_EVENT_STA_t>, QVector<_KGKIIS_GMPEAK_EVENT_STA_t>, QString);
 
     // draw circle, marker on map
     void drawEEWOnMap(_EEWInfo);
     void drawOnsiteOnMap(int, _KGOnSite_Info_t);
-    void drawPGAOnMap(QString, _KGKIIS_GMPEAK_EVENT_STA_t);
-    void drawIntensityOnMap(QString, QString, QString);
+    void drawPGAOnMap(_KGKIIS_GMPEAK_EVENT_STA_t);
 
 private slots:
     void goEvent();
