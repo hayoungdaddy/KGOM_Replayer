@@ -39,7 +39,10 @@ MainWindow::MainWindow(QString dbFileName, QString evid, QString myPLat, QString
     aMapContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     aMapContainer->setFocusPolicy(Qt::TabFocus);
     aMapContainer->setStyleSheet("background-color: black;");
-    alertView->setSource(QUrl(QStringLiteral("qrc:/Viewmap.qml")));
+    if(canAccessInternet)
+        alertView->setSource(QUrl(QStringLiteral("qrc:/Viewmap.qml")));
+    else
+        alertView->setSource(QUrl(QStringLiteral("qrc:/ViewmapForOffline.qml")));
     ui->alertMapLO->addWidget(aMapContainer);
     aRootObj = alertView->rootObject();
     QMetaObject::invokeMethod(this->aRootObj, "clearMap", Q_RETURN_ARG(QVariant, aReturnedValue));
