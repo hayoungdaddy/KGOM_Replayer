@@ -10,6 +10,18 @@ MainWindow::MainWindow(QString dbFileName, QString evid, QString myPLat, QString
     QIcon icon("/home/sysop/KGOM/params/images/PCIcon.png");
     setWindowIcon(icon);
 
+    // check for accessing internet
+    QProcess process;
+    QString cmd = "ping -W 1 8.8.8.8 -c 1";
+    process.start(cmd);
+    process.waitForFinished(-1); // will wait forever until finished
+    QString stdout = process.readAllStandardOutput();
+
+    if(stdout.indexOf("ttl") == -1) // return -1 means that this system can't access internet
+        canAccessInternet = false;
+    else
+        canAccessInternet = true;
+
     codec = QTextCodec::codecForName("utf-8");
     myPosition_Lat = myPLat.toDouble();
     myPosition_Lon = myPLon.toDouble();

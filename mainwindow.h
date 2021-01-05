@@ -12,6 +12,7 @@
 
 #include <QQuickView>
 #include <QtQuick>
+#include <QProcess>
 
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlQueryModel>
@@ -38,6 +39,7 @@ private:
     Ui::MainWindow *ui;
 
     QTextCodec *codec;
+    bool canAccessInternet;
 
     double myPosition_Lat, myPosition_Lon;
     double pVelocity, sVelocity;
